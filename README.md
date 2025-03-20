@@ -39,12 +39,26 @@ task-manager/
 
 1. Make sure Docker and Docker Compose are installed on your system.
 
-2. From the project root directory, run:
-   ```bash
+2. From the project root directory:
+
+   For Windows PowerShell:
+   ```powershell
+   # Stop any running containers
+   docker-compose down
+   
+   # Build and start the containers
    docker-compose up --build
    ```
+
+   For Bash (Linux/Mac):
+   ```bash
+   # Stop any running containers and start new ones
+   docker-compose down && docker-compose up --build
+   ```
+
    This will:
    - Build both frontend and backend containers
+   - Run database migrations automatically
    - Start the Django backend at http://127.0.0.1:8000
    - Start the React frontend at http://localhost:3000
    - Set up all necessary dependencies
@@ -111,10 +125,14 @@ task-manager/
 ## Usage
 
 1. Open your browser and navigate to http://localhost:3000
-2. Add a new task using the form at the top
-3. Mark tasks as complete by clicking the circle icon
-4. Delete tasks using the trash icon
-5. Filter tasks using the buttons below the form:
+2. Add a new task:
+   - Enter a task title (required)
+   - Add an optional description
+   - Click "Add Task" or press Enter
+3. Manage tasks:
+   - Mark tasks as complete by clicking the circle icon
+   - Delete tasks using the trash icon
+4. Filter tasks using the buttons below the form:
    - All: Shows all tasks
    - Active: Shows only incomplete tasks
    - Completed: Shows only completed tasks
@@ -141,4 +159,5 @@ task-manager/
 
 - DevOps:
   - Docker
+  - Docker Compose 
   - Docker Compose 
