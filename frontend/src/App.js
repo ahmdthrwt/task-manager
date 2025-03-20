@@ -4,6 +4,8 @@ import { Toaster, toast } from 'react-hot-toast';
 import TaskForm from './components/TaskForm';
 import TaskList from './components/TaskList';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://127.0.0.1:8000';
+
 function App() {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -11,9 +13,10 @@ function App() {
 
   const fetchTasks = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/api/tasks/');
+      const response = await axios.get(`${API_URL}/api/tasks/`);
       setTasks(response.data);
     } catch (error) {
+      console.error('Error fetching tasks:', error);
       toast.error('Failed to fetch tasks');
     } finally {
       setLoading(false);
@@ -26,10 +29,11 @@ function App() {
 
   const handleAddTask = async (taskData) => {
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/tasks/', taskData);
+      const response = await axios.post(`${API_URL}/api/tasks/`, taskData);
       setTasks([...tasks, response.data]);
       toast.success('Task added successfully!');
     } catch (error) {
+      console.error('Error adding task:', error);
       toast.error('Failed to add task');
     }
   };
@@ -37,7 +41,7 @@ function App() {
   const handleToggleComplete = async (taskId) => {
     try {
       const task = tasks.find(t => t.id === taskId);
-      await axios.patch(`http://127.0.0.1:8000/api/tasks/${taskId}/`, {
+      await axios.patch(`${API_URL}/api/tasks/${taskId}/`, {
         completed: !task.completed
       });
       setTasks(tasks.map(t => 
@@ -45,16 +49,18 @@ function App() {
       ));
       toast.success('Task updated!');
     } catch (error) {
+      console.error('Error updating task:', error);
       toast.error('Failed to update task');
     }
   };
 
   const handleDeleteTask = async (taskId) => {
     try {
-      await axios.delete(`http://127.0.0.1:8000/api/tasks/${taskId}/delete/`);
+      await axios.delete(`${API_URL}/api/tasks/${taskId}/delete/`);
       setTasks(tasks.filter(t => t.id !== taskId));
       toast.success('Task deleted!');
     } catch (error) {
+      console.error('Error deleting task:', error);
       toast.error('Failed to delete task');
     }
   };
