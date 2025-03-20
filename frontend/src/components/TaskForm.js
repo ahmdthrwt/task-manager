@@ -1,23 +1,36 @@
-import { useState } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
+import { PlusIcon } from '@heroicons/react/24/solid';
 
-const TaskForm = ({ fetchTasks }) => {
+const TaskForm = ({ onAddTask }) => {
   const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    await axios.post('http://127.0.0.1:8000/api/tasks/', { title, description });
+    if (!title.trim()) return;
+    
+    onAddTask({ title });
     setTitle('');
-    setDescription('');
-    fetchTasks();
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title" required />
-      <input value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description" required />
-      <button type="submit">Add Task</button>
+    <form onSubmit={handleSubmit} className="mb-6">
+      <div className="flex gap-2">
+        <input
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Add a new task..."
+          className="task-input flex-grow"
+        />
+        <button
+          type="submit"
+          className="btn-primary flex items-center gap-1"
+          disabled={!title.trim()}
+        >
+          <PlusIcon className="h-5 w-5" />
+          Add
+        </button>
+      </div>
     </form>
   );
 };
