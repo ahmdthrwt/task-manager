@@ -7,6 +7,7 @@ import TaskList from './components/TaskList';
 function App() {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState('all'); // 'all', 'active', 'completed'
 
   const fetchTasks = async () => {
     try {
@@ -58,6 +59,12 @@ function App() {
     }
   };
 
+  const filteredTasks = tasks.filter(task => {
+    if (filter === 'active') return !task.completed;
+    if (filter === 'completed') return task.completed;
+    return true;
+  });
+
   return (
     <div className="min-h-screen bg-gray-100">
       <Toaster position="top-right" />
@@ -67,11 +74,46 @@ function App() {
         </h1>
         <div className="bg-white rounded-xl shadow-sm p-6">
           <TaskForm onAddTask={handleAddTask} />
+          
+          {/* Filter Buttons */}
+          <div className="flex gap-2 mb-4">
+            <button
+              onClick={() => setFilter('all')}
+              className={`px-4 py-2 rounded-lg transition-colors duration-200 ${
+                filter === 'all'
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              All
+            </button>
+            <button
+              onClick={() => setFilter('active')}
+              className={`px-4 py-2 rounded-lg transition-colors duration-200 ${
+                filter === 'active'
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              Active
+            </button>
+            <button
+              onClick={() => setFilter('completed')}
+              className={`px-4 py-2 rounded-lg transition-colors duration-200 ${
+                filter === 'completed'
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              Completed
+            </button>
+          </div>
+
           {loading ? (
             <div className="text-center py-8 text-gray-500">Loading tasks...</div>
           ) : (
             <TaskList
-              tasks={tasks}
+              tasks={filteredTasks}
               onToggleComplete={handleToggleComplete}
               onDeleteTask={handleDeleteTask}
             />
